@@ -1,0 +1,28 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "target": "esnext", // Specify ECMAScript target version
+    "module": "esnext", // Specify the module code generation
+    "strict": true, // Enable all strict type-checking options
+    "jsx": "react-native", // Specify JSX code generation
+    "moduleResolution": "node", // Specify module resolution strategy
+    "baseUrl": "./", // Base directory to resolve non-relative module names
+    "paths": {
+      "*": ["node_modules/*"] // Allow resolution from node_modules
+    },
+    "allowSyntheticDefaultImports": true, // Allow default imports from modules
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "noEmit": true, // Disable emitting files from compilation
+    "resolveJsonModule": true, // Allow importing JSON files
+    "isolatedModules": true, // Ensure each file can be transpiled independently
+    "strictNullChecks": true, // Enable strict null checking
+    "forceConsistentCasingInFileNames": true // Disallow inconsistently cased references
+  },
+  "exclude": [
+    "node_modules", // Exclude node_modules from compilation
+    "babel.config.js", // Exclude Babel configuration file
+    "metro.config.js", // Exclude Metro bundler configuration file
+    "jest.config.js" // Exclude Jest configuration file
+  ],
+  "include": ["**/*.ts", "**/*.tsx"] // Include TypeScript and TSX files
+}

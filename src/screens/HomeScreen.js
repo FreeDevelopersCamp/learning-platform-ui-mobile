@@ -1,18 +1,24 @@
-import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+
+import IntroductionSection from "../components/HomeScreen/IntroductionSection";
+import EducationStats from "../components/HomeScreen/EducationStats";
+import InstructorSection from "../components/HomeScreen/InstructorSection";
 
 const HomeScreen = () => {
   return (
-    <View style={styles.container}>
-      <Text>Welcome to the Learning Platform!</Text>
-    </View>
+    <ScrollView style={styles.container}>
+      <IntroductionSection />
+      <EducationStats />
+      <InstructorSection />
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: "#fff",
   },
 });
 
