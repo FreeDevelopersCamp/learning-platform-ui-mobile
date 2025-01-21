@@ -56,19 +56,19 @@ const Footer = () => {
       <View style={styles.socialMedia}>
         <Image
           style={styles.icon}
-          source={require("../../assets/Images/facebook.png")}
+          source={require("../../../assets/Images/facebook.png")}
         />
         <Image
           style={styles.icon}
-          source={require("../../assets/Images/twitter.png")}
+          source={require("../../../assets/Images/twitter.png")}
         />
         <Image
           style={styles.icon}
-          source={require("../../assets/Images/linkedin.png")}
+          source={require("../../../assets/Images/linkedin.png")}
         />
         <Image
           style={styles.icon}
-          source={require("../../assets/Images/instagram.png")}
+          source={require("../../../assets/Images/instagram.png")}
         />
       </View>
       <Text style={styles.copyright}>

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import SvgPython from "../../assets/Icons/python.svg";
-import SvgGit from "../../assets/Icons/git.svg";
-import SvgReact from "../../assets/Icons/react.svg";
-import SvgNodeJs from "../../assets/Icons/node-js.svg";
-import SvgJavaScript from "../../assets/Icons/javascript.svg";
-import programmingTeam from "../../assets/Images/programming-team.png";
+import SvgPython from "../../../assets/Icons/python.svg";
+import SvgGit from "../../../assets/Icons/git.svg";
+import SvgReact from "../../../assets/Icons/react.svg";
+import SvgNodeJs from "../../../assets/Icons/node-js.svg";
+import SvgJavaScript from "../../../assets/Icons/javascript.svg";
 
 const logos = [
   { Component: SvgPython, size: 35 },
@@ -31,7 +30,10 @@ const IntroductionSection = () => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image source={programmingTeam} style={{ width: 250, height: 250 }} />
+        <Image
+          source={require("../../../assets/Images/programming-team.png")}
+          style={{ width: 250, height: 250 }}
+        />
 
         <View style={styles.iconContainer}>
           <CurrentLogo.Component

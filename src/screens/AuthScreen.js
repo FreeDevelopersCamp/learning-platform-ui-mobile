@@ -1,30 +1,30 @@
 import React, { useState } from "react";
 import {
-  StyleSheet,
   SafeAreaView,
   View,
   Text,
-  TouchableOpacity,
   TextInput,
+  TouchableOpacity,
   ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Picker } from "@react-native-picker/picker";
+import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 import { useAuth } from "../contexts/auth/AuthContext";
 
-import FreecodecampLogo from "../../assets/freecodecamp-svgrepo-com.svg";
-import Toast from "react-native-toast-message";
-
-export default function AuthScreen() {
+const AuthScreen = () => {
+  const navigation = useNavigation();
+  const { login } = useAuth();
   const [form, setForm] = useState({
     email: "",
     password: "",
-    role: "0", // Default role is Admin
+    role: "0",
   });
   const [isPickerVisible, setPickerVisible] = useState(false);
-  const [loading, setLoading] = useState(false); // Loading state
-  const { login } = useAuth(); // Access the login function from context
+  const [loading, setLoading] = useState(false); // Local loading state for button
 
   const roleOptions = [
     { label: "Admin", value: "0" },
@@ -48,44 +48,47 @@ export default function AuthScreen() {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      await login({
+      if (!form.email || !form.password) {
+        Toast.show({
+          type: "error",
+          text1: "Validation Error",
+          text2: "Username and Password are required.",
+        });
+        setLoading(false);
+        return;
+      }
+
+      const response = await login({
         username: form.email,
         password: form.password,
         role: form.role,
       });
-    } catch (error) {
-      // Handle login error
-      console.error("Login failed", error);
 
-      // Show error toast
+      Toast.show({
+        type: "success",
+        text1: "Login Successful",
+        text2: "Welcome back!",
+      });
+
+      navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+    } catch (error) {
+      console.error("Login failed:", error);
       Toast.show({
         type: "error",
-        text1: "Login failed",
-        text2: error.message || "Please check your credentials.",
+        text1: "Login Failed",
+        text2: error.message || "An error occurred. Please try again.",
       });
     } finally {
-      setLoading(false);
+      setLoading(false); // Ensure loading is reset after the login attempt finishes
     }
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#e8ecf4" }}>
-      {/* Toast component */}
-      <Toast ref={(ref) => Toast.setRef(ref)} />
-
       <KeyboardAwareScrollView style={styles.container}>
         <View style={styles.header}>
-          <View style={styles.iconContainer}>
-            <FreecodecampLogo width={50} height={50} />
-          </View>
-
           <Text style={styles.title}>Sign in to</Text>
-          <Text style={styles.appName}>
-            <Text style={{ fontSize: 30, color: "#075eec" }}>
-              FreeDevelopersCamp
-            </Text>
-          </Text>
-
+          <Text style={styles.appName}>FreeDevelopersCamp</Text>
           <Text style={styles.subtitle}>
             Get access to your portfolio and more
           </Text>
@@ -94,14 +97,13 @@ export default function AuthScreen() {
         <View style={styles.form}>
           <View style={styles.input}>
             <Text style={styles.inputLabel}>User name</Text>
-
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
               keyboardType="default"
               onChangeText={(email) => setForm({ ...form, email })}
-              placeholder="examplecom"
+              placeholder="username"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               value={form.email}
@@ -110,7 +112,6 @@ export default function AuthScreen() {
 
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Password</Text>
-
             <TextInput
               autoCorrect={false}
               clearButtonMode="while-editing"
@@ -189,116 +190,86 @@ export default function AuthScreen() {
       </TouchableOpacity>
     </SafeAreaView>
   );
-}
+};
+
+export default AuthScreen;
 
 const styles = StyleSheet.create({
-  iconContainer: {
-    alignSelf: "center",
-    marginBottom: 10,
-  },
   container: {
-    paddingVertical: 24,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-  },
-  title: {
-    fontSize: 25,
-    fontWeight: "700",
-    color: "#1D2A32",
-    textAlign: "center",
-    marginBottom: 6,
-  },
-  appName: {
-    fontSize: 30,
-    fontWeight: "700",
-    color: "#1D2A32",
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 15,
-    fontWeight: "500",
-    color: "#929292",
-    textAlign: "center",
+    flex: 1,
+    padding: 20,
+    marginTop: 30,
   },
   header: {
     alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 36,
+    marginBottom: 40,
+  },
+  iconContainer: {
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  appName: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#075eec",
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#6b7280",
+    marginTop: 5,
   },
   form: {
-    marginBottom: 24,
-    paddingHorizontal: 24,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-  },
-  formAction: {
-    marginTop: 4,
-    marginBottom: 16,
-  },
-  formLink: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#075eec",
-    textAlign: "center",
-  },
-  formFooter: {
-    paddingVertical: 24,
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#222",
-    textAlign: "center",
-    letterSpacing: 0.15,
+    marginTop: 20,
   },
   input: {
-    marginBottom: 16,
+    marginBottom: 15,
   },
   inputLabel: {
-    fontSize: 17,
-    fontWeight: "600",
-    color: "#222",
-    marginBottom: 8,
+    fontSize: 14,
+    color: "#333",
+    marginBottom: 5,
   },
   inputControl: {
     height: 50,
-    backgroundColor: "#fff",
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    fontSize: 15,
-    fontWeight: "500",
-    color: "#222",
+    borderColor: "#ddd",
     borderWidth: 1,
-    borderColor: "#C9D3DB",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    fontSize: 16,
   },
   pickerControl: {
     height: 50,
-    backgroundColor: "#fff",
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    fontSize: 15,
-    fontWeight: "500",
-    color: "#222",
+    borderColor: "#ddd",
     borderWidth: 1,
-    borderColor: "#C9D3DB",
-    zIndex: 1000,
-    elevation: 5,
+    borderRadius: 8,
+    fontSize: 16,
+  },
+  formAction: {
+    marginBottom: 20,
   },
   btn: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 30,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderWidth: 1,
     backgroundColor: "#075eec",
-    borderColor: "#075eec",
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: "center",
   },
   btnText: {
-    fontSize: 18,
-    fontWeight: "600",
     color: "#fff",
+    fontSize: 16,
+  },
+  formLink: {
+    color: "#075eec",
+    textAlign: "center",
+    fontSize: 14,
+    marginTop: 10,
+  },
+  formFooter: {
+    textAlign: "center",
+    fontSize: 14,
+    color: "#6b7280",
+    marginTop: 20,
   },
 });

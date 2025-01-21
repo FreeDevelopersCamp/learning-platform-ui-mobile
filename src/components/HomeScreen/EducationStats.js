@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import CapIcon from "../../assets/Icons/cap.svg";
-import BookIcon from "../../assets/Icons/book.svg";
-import BuildIcon from "../../assets/Icons/build.svg";
+import CapIcon from "../../../assets/Icons/cap.svg";
+import BookIcon from "../../../assets/Icons/book.svg";
+import BuildIcon from "../../../assets/Icons/build.svg";
 
 const EducationStats = () => {
   return (

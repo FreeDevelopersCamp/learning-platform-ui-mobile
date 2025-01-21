@@ -1,28 +1,20 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
-import { useDarkMode } from "../../contexts/DarkModeContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Header = ({ atHome = false }) => {
-  const { isDarkMode, toggleDarkMode } = useDarkMode();
-  const navigation = useNavigation();
+  const navigation = useNavigation(); // Access navigation from context
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-        <Text style={styles.logo}>FreeDevelopersCamp</Text>
+      {/* Menu Icon */}
+      <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+        <MaterialCommunityIcons name="menu" size={24} color="#fff" />
       </TouchableOpacity>
-      {!atHome && (
-        <TouchableOpacity onPress={toggleDarkMode}>
-          <MaterialCommunityIcons
-            name={isDarkMode ? "weather-sunny" : "moon-waning-crescent"}
-            size={24}
-            color="#fff"
-          />
-        </TouchableOpacity>
-      )}
+
+      {/* Title */}
+      <Text style={styles.logo}>FreeDevelopersCamp</Text>
     </View>
   );
 };
@@ -30,17 +22,17 @@ const Header = ({ atHome = false }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#18212F",
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
   },
   logo: {
+    flex: 1,
     color: "#fff",
     fontSize: 20,
     fontWeight: "bold",
+    marginLeft: 10,
   },
 });
 
