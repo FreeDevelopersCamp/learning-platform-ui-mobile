@@ -1,8 +1,12 @@
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from "expo-constants";
 
-const BASE_URL = "http://192.168.88.4:3030/api/v1";
-const TENANT_ID = "b_1";
+// Destructure environment variables from expo-config
+const { REACT_APP_API_HOST, REACT_APP_BASE_HOST_URL, REACT_APP_X_TENANT_ID } =
+  Constants.expoConfig?.extra || {};
+
+const BASE_URL = `${REACT_APP_API_HOST}${REACT_APP_BASE_HOST_URL}`;
 
 export const Auth = {
   login: async (userName, password, role) => {
@@ -11,7 +15,7 @@ export const Auth = {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "x-tenant-id": TENANT_ID,
+          "x-tenant-id": REACT_APP_X_TENANT_ID,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ userName, password, role }),
@@ -83,7 +87,7 @@ export const Auth = {
         method: "GET",
         headers: {
           Accept: "application/json",
-          "x-tenant-id": TENANT_ID,
+          "x-tenant-id": REACT_APP_X_TENANT_ID,
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
@@ -113,7 +117,7 @@ export const Auth = {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "x-tenant-id": TENANT_ID,
+          "x-tenant-id": REACT_APP_X_TENANT_ID,
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },

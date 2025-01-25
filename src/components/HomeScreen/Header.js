@@ -1,18 +1,21 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const Header = ({ atHome = false }) => {
-  const navigation = useNavigation(); // Access navigation from context
+const Header = () => {
+  const navigation = useNavigation();
+
+  const handleToggleDrawer = () => {
+    navigation.dispatch(DrawerActions.toggleDrawer());
+  };
 
   return (
     <View style={styles.container}>
       {/* Menu Icon */}
-      <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-        <MaterialCommunityIcons name="menu" size={24} color="#fff" />
+      <TouchableOpacity onPress={handleToggleDrawer}>
+        <MaterialCommunityIcons name="menu" size={30} color="#fff" />
       </TouchableOpacity>
-
       {/* Title */}
       <Text style={styles.logo}>FreeDevelopersCamp</Text>
     </View>

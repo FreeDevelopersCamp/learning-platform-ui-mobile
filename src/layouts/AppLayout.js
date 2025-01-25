@@ -5,20 +5,26 @@ import {
   SafeAreaView,
   ActivityIndicator,
 } from "react-native";
-
 import { useAuth } from "../contexts/auth/AuthContext";
+import { AppProvider } from "../contexts/app/AppContext";
 import { useGetUser } from "../hooks/user/useGetUser";
+import { useFetchProgressByUserId } from "../hooks/progress/useProgress";
 
 import Header from "../components/HomeScreen/Header";
+import TabNavigator from "../components/TabNavigator";
 
-const HomeLayout = ({ children, atHome }) => {
+const AppLayout = ({ children }) => {
   const { isLoading: isSessionLoading, session } = useAuth();
+
   const { user, isLoading: userLoading } = useGetUser(
     session?.username,
     session?.token
   );
 
-  const isLoading = isSessionLoading || userLoading;
+  const { data: userProgress, isLoading: userProgressLoading } =
+    useFetchProgressByUserId(user?._id);
+
+  const isLoading = isSessionLoading || userLoading || userProgressLoading;
 
   if (isLoading) {
     return (
@@ -30,12 +36,16 @@ const HomeLayout = ({ children, atHome }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header atHome={atHome} />
-      <View style={styles.content}>{children}</View>
+      <AppProvider value={{ session, user, userProgress }}>
+        <Header />
+        <View style={styles.content}>{children}</View>
+        <TabNavigator />
+      </AppProvider>
     </SafeAreaView>
   );
 };
 
+// Styles for the component
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -53,4 +63,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeLayout;
+export default AppLayout;

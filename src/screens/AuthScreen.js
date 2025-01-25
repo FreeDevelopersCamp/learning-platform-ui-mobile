@@ -70,7 +70,7 @@ const AuthScreen = () => {
         text2: "Welcome back!",
       });
 
-      navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+      navigation.reset({ index: 0, routes: [{ name: "Dashboard" }] });
     } catch (error) {
       console.error("Login failed:", error);
       Toast.show({
@@ -138,6 +138,8 @@ const AuthScreen = () => {
                     key={option.value}
                     label={option.label}
                     value={option.value}
+                    color="#333" // Make the options text darker
+                    style={{ fontSize: 16 }} // Optional: Add font size
                   />
                 ))}
               </Picker>
