@@ -1,89 +1,80 @@
 import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-
-// Screens
-import HomeScreen from "../screens/HomeScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import DashboardScreen from "../screens/DashboardScreen";
-import NotificationsScreen from "../screens/NotificationsScreen";
-import ChatScreen from "../screens/ChatScreen";
-
-// Layout Wrapper
-import HomeLayout from "../layouts/HomeLayout";
-
-const Tab = createBottomTabNavigator();
-
-// Wrapper Components for Layout
-const HomeWithLayout = () => (
-  <HomeLayout atHome={true}>
-    <HomeScreen />
-  </HomeLayout>
-);
-
-const ProfileWithLayout = () => (
-  <HomeLayout atHome={false}>
-    <ProfileScreen />
-  </HomeLayout>
-);
-
-const DashboardWithLayout = () => (
-  <HomeLayout atHome={false}>
-    <DashboardScreen />
-  </HomeLayout>
-);
-
-const NotificationsWithLayout = () => (
-  <HomeLayout atHome={false}>
-    <NotificationsScreen />
-  </HomeLayout>
-);
-
-const ChatWithLayout = () => (
-  <HomeLayout atHome={false}>
-    <ChatScreen />
-  </HomeLayout>
-);
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const TabNavigator = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+
+  const handleNavigation = (screen) => {
+    navigation.navigate(screen);
+  };
+
+  const tabs = [
+    { name: "Dashboard", icon: "grid-outline", label: "Dashboard" },
+    {
+      name: "Notifications",
+      icon: "notifications-outline",
+      label: "Notifications",
+    },
+    { name: "Chat", icon: "chatbubble-outline", label: "Chat" },
+    { name: "Profile", icon: "person-outline", label: "Profile" },
+    { name: "My Library", icon: "book-outline", label: "Library" },
+  ];
+
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: false, // Completely hides the default header
-        tabBarStyle: {
-          backgroundColor: "#f8f8f8",
-          height: 70,
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-        },
-        tabBarActiveTintColor: "#4C9EEB",
-        tabBarInactiveTintColor: "gray",
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-
-          if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "Profile") {
-            iconName = focused ? "person" : "person-outline";
-          } else if (route.name === "Dashboard") {
-            iconName = focused ? "grid" : "grid-outline";
-          } else if (route.name === "Notifications") {
-            iconName = focused ? "notifications" : "notifications-outline";
-          } else if (route.name === "Chat") {
-            iconName = focused ? "chatbubble" : "chatbubble-outline";
-          }
-
-          return <Icon name={iconName} size={size} color={color} />;
-        },
-      })}
-    >
-      <Tab.Screen name="Home" component={HomeWithLayout} />
-      <Tab.Screen name="Profile" component={ProfileWithLayout} />
-      <Tab.Screen name="Dashboard" component={DashboardWithLayout} />
-      <Tab.Screen name="Notifications" component={NotificationsWithLayout} />
-      <Tab.Screen name="Chat" component={ChatWithLayout} />
-    </Tab.Navigator>
+    <View style={styles.bottomTabs}>
+      {tabs.map((tab) => (
+        <TouchableOpacity
+          key={tab.name}
+          style={styles.tabButton}
+          onPress={() => handleNavigation(tab.name)}
+        >
+          <Icon
+            name={tab.icon}
+            size={24}
+            color={route.name === tab.name ? "#4C9EEB" : "#000"}
+          />
+          <Text
+            style={[
+              styles.tabText,
+              { color: route.name === tab.name ? "#4C9EEB" : "#000" },
+            ]}
+          >
+            {tab.label}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  bottomTabs: {
+    position: "absolute",
+    bottom: 5,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#f8f8f8",
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: "#ddd",
+  },
+  tabButton: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 5,
+  },
+  tabText: {
+    fontSize: 10,
+    fontWeight: "bold",
+    marginTop: 4,
+  },
+});
 
 export default TabNavigator;

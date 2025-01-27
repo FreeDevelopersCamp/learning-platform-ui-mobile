@@ -1,43 +1,55 @@
-import { formatDistance, parseISO } from "date-fns";
-import { differenceInDays } from "date-fns/esm";
+// utils/helpers.js
 
-// We want to make this function work for both Date objects and strings (which come from Supabase)
-export const subtractDates = (dateStr1, dateStr2) =>
-  differenceInDays(parseISO(String(dateStr1)), parseISO(String(dateStr2)));
+// Subtract two dates and return the difference in days
+export const subtractDates = (dateStr1, dateStr2) => {
+  const date1 = new Date(dateStr1);
+  const date2 = new Date(dateStr2);
+  const timeDifference = date1.getTime() - date2.getTime();
+  const dayDifference = timeDifference / (1000 * 3600 * 24);
+  return Math.round(dayDifference);
+};
 
-export const formatDistanceFromNow = (dateStr) =>
-  formatDistance(parseISO(dateStr), new Date(), {
-    addSuffix: true,
-  })
-    .replace("about ", "")
-    .replace("in", "In");
+// Format a date to display how long ago or in the future it is
+export const formatDistanceFromNow = (dateStr) => {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const timeDifference = now.getTime() - date.getTime();
+  const dayDifference = timeDifference / (1000 * 3600 * 24);
 
-// Supabase needs an ISO date string. However, that string will be different on every render because the MS or SEC have changed, which isn't good. So we use this trick to remove any time
-export const getToday = function (options = {}) {
+  if (dayDifference > 0) {
+    return `${Math.round(dayDifference)} days ago`;
+  } else {
+    return `In ${Math.abs(Math.round(dayDifference))} days`;
+  }
+};
+
+// Get today's date as an ISO string, adjusted to the start or end of the day
+export const getToday = (options = {}) => {
   const today = new Date();
 
-  // This is necessary to compare with created_at from Supabase, because it it not at 0.0.0.0, so we need to set the date to be END of the day when we compare it with earlier dates
-  if (options?.end)
+  if (options.end) {
     // Set to the last second of the day
-    today.setUTCHours(23, 59, 59, 999);
-  else today.setUTCHours(0, 0, 0, 0);
+    today.setHours(23, 59, 59, 999);
+  } else {
+    today.setHours(0, 0, 0, 0);
+  }
   return today.toISOString();
 };
 
-export const formatCurrency = (value) =>
-  new Intl.NumberFormat("en", { style: "currency", currency: "USD" }).format(
-    value
-  );
+// Format a value into USD currency
+export const formatCurrency = (value) => `$${value.toFixed(2)}`;
 
+// Convert minutes into a human-readable duration
 export const formatDuration = (minutes) => {
   if (minutes < 60) {
     return `${minutes} Minute${minutes === 1 ? "" : "s"}`;
   }
+  const hours = Math.floor(minutes / 60);
 
-  const hours = Math.round(minutes / 60);
-  return `${hours} Hour${hours !== 1 ? "s" : ""}`;
+  return `${hours}`;
 };
 
+// Capitalize the first letter of each word in a hyphen-separated string
 export const capitalizeWords = (text) => {
   return text
     .split("-") // Split the text by hyphens
@@ -45,23 +57,16 @@ export const capitalizeWords = (text) => {
     .join(" "); // Join the words with spaces
 };
 
+// Map role codes to human-readable role names
 export const getRoleCode = (role) => {
-  switch (role) {
-    case "0":
-      return "Admin";
-    case "1":
-      return "Owner";
-    case "2":
-      return "Manager";
-    case "3":
-      return "Account Manager";
-    case "4":
-      return "Content Manager";
-    case "5":
-      return "Instructor";
-    case "6":
-      return "Learner";
-    default:
-      return "Unknown";
-  }
+  const roles = {
+    0: "Admin",
+    1: "Owner",
+    2: "Manager",
+    3: "Account Manager",
+    4: "Content Manager",
+    5: "Instructor",
+    6: "Learner",
+  };
+  return roles[role] || "Unknown";
 };

@@ -19,8 +19,12 @@ export const AuthProvider = ({ children }) => {
       }
 
       const session = await Auth.getSession();
-      setAuth({ isAuthenticated: true, username: session.username });
-      setSession({ ...session, token });
+      if (session) {
+        setAuth({ isAuthenticated: true, username: session.username });
+        setSession({ ...session, token }); // Ensure token is part of the session
+      } else {
+        throw new Error("Invalid session data");
+      }
     } catch (error) {
       console.error("Failed to fetch session:", error);
       await AsyncStorage.removeItem("token");
