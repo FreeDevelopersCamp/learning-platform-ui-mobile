@@ -2,7 +2,6 @@ import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 
-// Destructure environment variables from expo-config
 const { REACT_APP_API_HOST, REACT_APP_BASE_HOST_URL, REACT_APP_X_TENANT_ID } =
   Constants.expoConfig?.extra || {};
 
@@ -42,9 +41,7 @@ export const Auth = {
       }
 
       const data = await response.json();
-
-      // Store token in AsyncStorage
-      await AsyncStorage.setItem("token", data.token);
+      await AsyncStorage.setItem("token", data.token); // Store token in AsyncStorage
 
       Toast.show({
         type: "success",
@@ -78,7 +75,6 @@ export const Auth = {
   getSession: async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-
       if (!token) {
         throw new Error("No token found. Please log in again.");
       }
@@ -108,7 +104,6 @@ export const Auth = {
   logout: async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-
       if (!token) {
         throw new Error("No token found. Unable to log out.");
       }

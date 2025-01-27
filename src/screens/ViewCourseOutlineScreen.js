@@ -4,8 +4,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   Animated,
-  FlatList, // Keep FlatList for scrolling content
-  Text, // Ensure Text is imported for rendering
+  FlatList,
+  Text,
 } from "react-native";
 
 import TopBar from "../components/TopBar";
@@ -20,7 +20,7 @@ const ViewCourseOutlineScreen = ({ route, navigation }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const slideAnim = useState(new Animated.Value(-300))[0];
 
-  const { roadmap, userProgress, courseId } = route.params || {};
+  const { roadmap, userProgress, courseId, orderId } = route.params || {};
   const {
     topic = "Unknown Topic",
     order = [],
@@ -32,15 +32,25 @@ const ViewCourseOutlineScreen = ({ route, navigation }) => {
       const flattened = flattenStructure(order);
       setFlatStructure(flattened);
 
-      const selectedIndex = courseId
-        ? flattened.findIndex((item) => item.id === courseId)
-        : 0;
-
-      setCurrentIndex(selectedIndex !== -1 ? selectedIndex : 0);
-      setSelectedItem(flattened[selectedIndex]); // Set the initial course or project item
+      // Check if orderId exists, and set currentItem accordingly
+      if (orderId) {
+        const selectedIndex = flattened.findIndex(
+          (item) => item.id === orderId
+        );
+        if (selectedIndex !== -1) {
+          setSelectedItem(flattened[selectedIndex]);
+          setCurrentIndex(selectedIndex); // Set the selectedIndex if orderId is found
+        }
+      } else if (courseId) {
+        const selectedIndex = flattened.findIndex(
+          (item) => item.id === courseId
+        );
+        setCurrentIndex(selectedIndex !== -1 ? selectedIndex : 0);
+        setSelectedItem(flattened[selectedIndex]);
+      }
     }
     setIsLoading(false);
-  }, [order, courseId]);
+  }, [order, courseId, orderId]);
 
   const flattenStructure = (items) => {
     const flat = [];

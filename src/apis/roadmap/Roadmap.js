@@ -25,6 +25,9 @@ const Roadmap = {
   list: async (params = {}) => {
     try {
       const token = await getToken();
+      if (!token) {
+        throw new Error("No token found. Please log in again.");
+      }
       const response = await axios.get(`${BASE_URL}/roadmap`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -43,6 +46,9 @@ const Roadmap = {
   listByInstructor: async (instructorId, params = {}) => {
     try {
       const token = await getToken();
+      if (!token) {
+        throw new Error("No token found. Please log in again.");
+      }
       const response = await axios.get(
         `${BASE_URL}/roadmap/roadmapByInstructor/${instructorId}`,
         {
@@ -64,6 +70,9 @@ const Roadmap = {
   getById: async (id, params = {}) => {
     try {
       const token = await getToken();
+      if (!token) {
+        throw new Error("No token found. Please log in again.");
+      }
       const response = await axios.get(`${BASE_URL}/roadmap/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -82,6 +91,9 @@ const Roadmap = {
   create: async (data, params = {}) => {
     try {
       const token = await getToken();
+      if (!token) {
+        throw new Error("No token found. Please log in again.");
+      }
       const response = await axios.post(`${BASE_URL}/roadmap`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -100,6 +112,9 @@ const Roadmap = {
   update: async (data, params = {}) => {
     try {
       const token = await getToken();
+      if (!token) {
+        throw new Error("No token found. Please log in again.");
+      }
       const response = await axios.patch(`${BASE_URL}/roadmap`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -118,6 +133,9 @@ const Roadmap = {
   delete: async (id, params = {}) => {
     try {
       const token = await getToken();
+      if (!token) {
+        throw new Error("No token found. Please log in again.");
+      }
       const response = await axios.delete(`${BASE_URL}/roadmap/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
