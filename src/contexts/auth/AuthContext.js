@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { Auth } from "../../apis/auth/Auth";
 
 const AuthContext = createContext();
@@ -8,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({ isAuthenticated: false });
   const [session, setSession] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Fetch session details and set the authentication state
   const fetchSession = async () => {
@@ -15,13 +17,14 @@ export const AuthProvider = ({ children }) => {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
         setIsLoading(false);
+        setAuth({ isAuthenticated: false });
         return;
       }
 
       const session = await Auth.getSession();
       if (session) {
         setAuth({ isAuthenticated: true, username: session.username });
-        setSession({ ...session, token }); // Ensure token is part of the session
+        setSession({ ...session, token });
       } else {
         throw new Error("Invalid session data");
       }
@@ -30,6 +33,7 @@ export const AuthProvider = ({ children }) => {
       await AsyncStorage.removeItem("token");
       setAuth({ isAuthenticated: false });
       setSession(null);
+      setError("Session fetch failed. Please log in again.");
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +52,7 @@ export const AuthProvider = ({ children }) => {
       await fetchSession(); // Fetch the session after login
     } catch (error) {
       console.error("Login failed:", error);
-      throw error; // Rethrow the error for the caller to handle
+      setError("Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -63,6 +67,7 @@ export const AuthProvider = ({ children }) => {
       setSession(null);
     } catch (error) {
       console.error("Logout failed:", error);
+      setError("Logout failed. Please try again.");
     }
   };
 
@@ -77,6 +82,7 @@ export const AuthProvider = ({ children }) => {
         auth,
         session,
         isLoading,
+        error,
         login,
         logout,
       }}

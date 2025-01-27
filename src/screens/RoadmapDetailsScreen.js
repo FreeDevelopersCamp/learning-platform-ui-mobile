@@ -100,7 +100,7 @@ const ViewRoadmapDetailsScreen = () => {
   }
 
   const orderCards = roadmap.order
-    .filter((item) => item && !roadmap.practicesIds.includes(item._id)) // Skip practices
+    .filter((item) => item && !roadmap.practicesIds.includes(item._id))
     .map((item) => {
       const type = roadmap.coursesIds.includes(item._id)
         ? "course"
@@ -119,7 +119,7 @@ const ViewRoadmapDetailsScreen = () => {
         userProgress.currentProjectsIds?.includes(item._id);
 
       return {
-        id: item._id,
+        id: item._id, // ID of the item
         type,
         name: item.name,
         description: item.description,
@@ -160,6 +160,7 @@ const ViewRoadmapDetailsScreen = () => {
           xp={item.xp}
           isCompleted={item.isCompleted}
           isSubmitted={item.isSubmitted}
+          orderId={item.id}
           roadmap={roadmap}
           userProgress={userProgress}
         />

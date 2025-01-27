@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
-import Roadmap from "../../apis/roadmaps/Roadmap";
+import Roadmap from "../../apis/roadmap/Roadmap";
 
 export function useFetchRoadmapById(roadmapId) {
   return useQuery({

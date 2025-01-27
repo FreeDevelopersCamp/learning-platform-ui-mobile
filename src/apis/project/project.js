@@ -1,44 +1,35 @@
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 
 // Destructure environment variables from expo-config
 const { REACT_APP_API_HOST, REACT_APP_BASE_HOST_URL, REACT_APP_X_TENANT_ID } =
-  Constants.expoConfig?.extra || {};
+  Constants.expoConfig?.extra || {}; // Ensure environment variables are available
 
 const BASE_URL = `${REACT_APP_API_HOST}${REACT_APP_BASE_HOST_URL}`;
-const X_TENANT_ID = REACT_APP_X_TENANT_ID;
 
-// Function to get token from AsyncStorage
-const getToken = async () => {
-  try {
-    const token = await AsyncStorage.getItem("token");
-    return token;
-  } catch (error) {
-    console.error("Failed to retrieve token:", error);
-    return null;
-  }
-};
-
-class Progress {
+class Project {
   constructor() {
     this.instance = axios.create({
-      baseURL: BASE_URL,
+      baseURL: BASE_URL, // Combine base URL and path
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        "x-tenant-id": X_TENANT_ID,
+        "x-tenant-id": REACT_APP_X_TENANT_ID,
       },
     });
 
-    // Request interceptor to get token and set Authorization header
+    // Request interceptor for handling requests globally
     this.instance.interceptors.request.use(
       async (config) => {
-        const token = await getToken();
+        // Get token from AsyncStorage and add it to the Authorization header
+        const token = await AsyncStorage.getItem("token");
+
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
+
         return config;
       },
       (error) => {
@@ -46,7 +37,7 @@ class Progress {
       }
     );
 
-    // Response interceptor to handle errors globally
+    // Response interceptor for handling responses globally
     this.instance.interceptors.response.use(
       (response) => response,
       (error) => {
@@ -64,30 +55,20 @@ class Progress {
     );
   }
 
-  // Fetch a list of progress entries with optional pagination
+  // Fetch a list of projects with optional pagination
   async list(params = {}) {
     try {
-      const response = await this.instance.get("/progress", { params });
+      const response = await this.instance.get("/project", { params });
       return response.data;
     } catch (error) {
       throw new Error(error.message);
     }
   }
 
-  // Fetch progress details by ID
-  async getById(id, params = {}) {
+  // Fetch project details by ID
+  async getById(projectId, params = {}) {
     try {
-      const response = await this.instance.get(`/progress/${id}`, { params });
-      return response.data;
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  }
-
-  // Fetch progress by user ID
-  async getByUserId(userId, params = {}) {
-    try {
-      const response = await this.instance.get(`/progress/userId/${userId}`, {
+      const response = await this.instance.get(`/project/${projectId}`, {
         params,
       });
       return response.data;
@@ -96,30 +77,30 @@ class Progress {
     }
   }
 
-  // Create new progress entry
+  // Create a new project
   async create(data, params = {}) {
     try {
-      const response = await this.instance.post("/progress", data, { params });
+      const response = await this.instance.post("/project", data, { params });
       return response.data;
     } catch (error) {
       throw new Error(error.message);
     }
   }
 
-  // Update an existing progress entry
+  // Update an existing project
   async update(data, params = {}) {
     try {
-      const response = await this.instance.patch("/progress", data, { params });
+      const response = await this.instance.patch("/project", data, { params });
       return response.data;
     } catch (error) {
       throw new Error(error.message);
     }
   }
 
-  // Delete progress by ID
-  async delete(id, params = {}) {
+  // Delete a project by ID
+  async delete(projectId, params = {}) {
     try {
-      const response = await this.instance.delete(`/progress/${id}`, {
+      const response = await this.instance.delete(`/project/${projectId}`, {
         params,
       });
       return response.data;
@@ -129,4 +110,4 @@ class Progress {
   }
 }
 
-export default Progress;
+export default Project;

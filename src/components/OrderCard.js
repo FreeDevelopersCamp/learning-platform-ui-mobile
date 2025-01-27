@@ -1,9 +1,13 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-
-import { useUpdateProgress } from "../hooks/progress/useProgress";
 
 import { formatDuration } from "../utils/helpers";
 
@@ -16,28 +20,18 @@ const OrderCard = ({
   xp,
   isCompleted,
   isSubmitted,
+  orderId,
   roadmap,
   userProgress,
 }) => {
   const navigation = useNavigation();
 
-  const { mutate: updateProgress, isLoading: updatingProgress } =
-    useUpdateProgress();
-
-  if (updatingProgress) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#075eec" />
-      </View>
-    );
-  }
-
   const handleStartClick = () => {
     navigation.navigate("ViewCourseOutlineScreen", {
       roadmap: roadmap,
       userProgress: userProgress,
+      orderId: orderId,
     });
-    return;
   };
 
   return (

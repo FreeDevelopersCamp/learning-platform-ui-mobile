@@ -1,4 +1,5 @@
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 import Constants from "expo-constants"; // To use expo-config for API configuration
 
@@ -6,22 +7,38 @@ import Constants from "expo-constants"; // To use expo-config for API configurat
 const { REACT_APP_API_HOST, REACT_APP_BASE_HOST_URL, REACT_APP_X_TENANT_ID } =
   Constants.expoConfig?.extra || {}; // Ensure environment variables are available
 
+const BASE_URL = `${REACT_APP_API_HOST}${REACT_APP_BASE_HOST_URL}`;
+const X_TENANT_ID = REACT_APP_X_TENANT_ID;
+
+// Function to get token from AsyncStorage
+const getToken = async () => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    return token;
+  } catch (error) {
+    console.error("Failed to retrieve token:", error);
+    return null;
+  }
+};
+
 class Course {
-  constructor(token) {
-    this.token = token;
+  constructor() {
     this.instance = axios.create({
-      baseURL: `${REACT_APP_API_HOST}${REACT_APP_BASE_HOST_URL}`, // Combine base URL and path
+      baseURL: BASE_URL, // Combine base URL and path
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        "x-tenant-id": REACT_APP_X_TENANT_ID,
-        Authorization: `Bearer ${this.token || ""}`,
+        "x-tenant-id": X_TENANT_ID,
       },
     });
 
-    // Request interceptor for handling requests globally
+    // Request interceptor to get token and set Authorization header
     this.instance.interceptors.request.use(
-      (config) => {
+      async (config) => {
+        const token = await getToken();
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
         return config;
       },
       (error) => {
@@ -47,6 +64,7 @@ class Course {
     );
   }
 
+  // Fetch a list of courses with optional pagination
   async list(params = {}) {
     try {
       const response = await this.instance.get("/course", { params });
@@ -56,6 +74,7 @@ class Course {
     }
   }
 
+  // Fetch course details by ID
   async getById(id, params = {}) {
     try {
       const response = await this.instance.get(`/course/${id}`, { params });
@@ -65,6 +84,7 @@ class Course {
     }
   }
 
+  // Create a new course
   async create(data, params = {}) {
     try {
       const response = await this.instance.post("/course", data, { params });
@@ -74,6 +94,7 @@ class Course {
     }
   }
 
+  // Update an existing course
   async update(data, params = {}) {
     try {
       const response = await this.instance.patch("/course", data, { params });
@@ -83,6 +104,7 @@ class Course {
     }
   }
 
+  // Delete a course by ID
   async delete(id, params = {}) {
     try {
       const response = await this.instance.delete(`/course/${id}`, { params });
