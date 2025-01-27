@@ -49,7 +49,7 @@ const AppLayout = ({ children }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#18212F", // Match header background
   },
   content: {
     flex: 1,

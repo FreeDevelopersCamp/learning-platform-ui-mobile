@@ -2,11 +2,11 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import * as Progress from "react-native-progress";
 
-const ProgressBar = ({ progress = 0 }) => {
+const ProgressBar = ({ percentage }) => {
   return (
     <View style={styles.container}>
-      <Progress.Bar progress={progress} width={200} color="#03EF62" />
-      <Text style={styles.label}>{`${Math.round(progress * 100)}%`}</Text>
+      <Progress.Bar progress={percentage / 100} width={282} color="#03EF62" />
+      <Text style={styles.label}>{`${Math.round(percentage)}%`}</Text>
     </View>
   );
 };

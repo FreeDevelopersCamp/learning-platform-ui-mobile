@@ -9,13 +9,13 @@ import MainSection from "../components/MainSection";
 import CoursesSection from "../components/CoursesSection";
 
 const DashboardScreen = () => {
-  const { session, user, userProgress } = useAppContext();
+  const { user, userProgress } = useAppContext();
 
   return (
     <ScrollView style={styles.container}>
       <Text
         style={styles.welcomeText}
-      >{`Welcome back, ${user.userName}👋`}</Text>
+      >{`Welcome back, ${user?.userName}👋`}</Text>
       <Statistics userProgress={userProgress} />
       <MainSection userProgress={userProgress} />
 

@@ -11,7 +11,6 @@ import { useNavigation } from "@react-navigation/native";
 import { useFetchRoadmapById } from "../hooks/roadmaps/useRoadmaps";
 
 import Progress from "../components/Progress";
-import Review from "../components/Review";
 import { formatDuration } from "../utils/helpers";
 
 const MainSection = ({ userProgress }) => {
@@ -52,22 +51,11 @@ const MainSection = ({ userProgress }) => {
   }, 0);
 
   const handleContinue = () => {
-    const nextCourse = roadmap.order.find(
-      (course) =>
-        userProgress?.completedCoursesIds &&
-        !userProgress.completedCoursesIds.includes(course._id)
-    );
-
-    if (nextCourse) {
-      navigation.navigate("CourseDetailsScreen", {
-        roadmapTopic: roadmap.topic,
-        roadmapId,
-        courseTitle: nextCourse.name,
-        courseId: nextCourse._id,
-      });
-    } else {
-      navigation.navigate("RoadmapOverviewScreen", { roadmapId });
-    }
+    navigation.navigate("ViewCourseOutlineScreen", {
+      roadmap: roadmap,
+      userProgress: userProgress,
+    });
+    return;
   };
 
   return (
