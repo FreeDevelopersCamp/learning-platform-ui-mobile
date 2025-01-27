@@ -17,7 +17,7 @@ export default function App() {
         <NavigationContainer>
           <DarkModeProvider>
             {/* Set the status bar style */}
-            <StatusBar barStyle="dark-content" />
+            <StatusBar barStyle="light-content" backgroundColor="#18212F" />
             <AppNavigator />
           </DarkModeProvider>
         </NavigationContainer>

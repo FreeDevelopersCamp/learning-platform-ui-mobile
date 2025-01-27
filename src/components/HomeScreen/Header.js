@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#18212F",
     paddingVertical: 15,
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
   },
   logo: {
     flex: 1,

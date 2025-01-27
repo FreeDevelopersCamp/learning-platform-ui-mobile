@@ -75,13 +75,13 @@ const CustomDrawerContent = (props) => {
           <Icon name="book-outline" size={size} color={color} />
         )}
       />
-      <DrawerItem
+      {/* <DrawerItem
         label="Leaderboard"
         onPress={() => props.navigation.navigate("Leaderboard")}
         icon={({ color, size }) => (
           <Icon name="trophy-outline" size={size} color={color} />
         )}
-      />
+      /> */}
       <DrawerItem
         label="Roadmaps"
         onPress={() => props.navigation.navigate("Roadmaps")}
@@ -154,10 +154,10 @@ const DrawerNavigator = () => {
         name="My Library"
         component={withAppLayout(MyLibraryScreen)}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Leaderboard"
         component={withAppLayout(LeaderboardScreen)}
-      />
+      /> */}
       <Drawer.Screen
         name="Roadmaps"
         component={withAppLayout(RoadmapsScreen)}
