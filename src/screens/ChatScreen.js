@@ -27,12 +27,6 @@ const ChatScreen = () => {
     refetch: refetchUsers, // ✅ Manual refresh function for users
   } = useListUser();
 
-  // ✅ Memoized current user from `session.userName`
-  // const currentUser = useMemo(() => {
-  //   if (!session?.userName || !users) return null;
-  //   return users.find((user) => user.userName === session.userName);
-  // }, [users, session?.userName]);
-
   // ✅ Ensure session is valid
   useEffect(() => {
     if (!session) {
@@ -42,8 +36,6 @@ const ChatScreen = () => {
 
   // ✅ Handle user selection and navigate to ChatContainer
   const handleUserSelect = (user) => {
-    console.log("currentUser: ", currentUser);
-    console.log("user: ", user);
     if (!currentUser) {
       console.error("❌ Current user not found. Cannot navigate.");
       Toast.show({
@@ -55,7 +47,6 @@ const ChatScreen = () => {
       return;
     }
 
-    console.log("✅ Navigating to Chat with user:", user);
     navigation.navigate("Chatting", { selectedUser: user, currentUser });
   };
 
