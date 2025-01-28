@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   ActivityIndicator,
 } from "react-native";
+
 import { useAuth } from "../contexts/auth/AuthContext";
 import { AppProvider } from "../contexts/app/AppContext";
 import { useGetUser } from "../hooks/user/useGetUser";

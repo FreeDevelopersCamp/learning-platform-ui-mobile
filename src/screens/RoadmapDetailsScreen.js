@@ -12,14 +12,17 @@ import { useNavigation } from "@react-navigation/native";
 
 import { useAuth } from "../contexts/auth/AuthContext";
 import { useGetUser } from "../hooks/user/useGetUser";
-import { useFetchProgressByUserId } from "../hooks/progress/useProgress";
+import {
+  useFetchProgressByUserId,
+  useUpdateProgress,
+} from "../hooks/progress/useProgress";
 import { useFetchRoadmapById } from "../hooks/roadmaps/useRoadmaps";
 
 import ProgressBar from "../components/ProgressBar";
 import OrderCard from "../components/OrderCard";
 import InstructorsSet from "../components/InstructorsSet";
 
-const ViewRoadmapDetailsScreen = () => {
+const RoadmapDetailsScreen = () => {
   const navigation = useNavigation();
   const [percentage, setPercentage] = useState(0);
   const [buttonText, setButtonText] = useState("Start");
@@ -33,6 +36,9 @@ const ViewRoadmapDetailsScreen = () => {
   );
   const { data: userProgress, isLoading: userProgressLoading } =
     useFetchProgressByUserId(user?._id);
+
+  const { mutate: updateProgress, isLoading: updatingProgress } =
+    useUpdateProgress();
 
   const {
     data: roadmap,
@@ -67,21 +73,39 @@ const ViewRoadmapDetailsScreen = () => {
 
   const handleButtonPress = () => {
     if (buttonText === "Start") {
+      const updatedProgress = {
+        ...userProgress,
+        currentRoadmapsIds: [
+          ...userProgress.currentRoadmapsIds,
+          { itemId: roadmapId, progress: 0 },
+        ],
+      };
+
+      updateProgress(updatedProgress, {
+        onSuccess: () => {
+          setButtonText("Continue");
+          navigation.navigate("ViewCourseOutlineScreen", {
+            roadmap: roadmap,
+            userProgress: updatedProgress,
+          });
+        },
+        onError: () => {
+          console.error("Failed to update progress");
+        },
+      });
+
+      return;
+    }
+
+    if (buttonText === "Continue") {
       navigation.navigate("ViewCourseOutlineScreen", {
         roadmap: roadmap,
         userProgress: userProgress,
       });
-      return;
-    } else if (buttonText === "Continue") {
-      navigation.navigate("ViewCourseOutlineScreen", {
-        roadmap: roadmap,
-        userProgress: userProgress,
-      });
-      return;
     }
   };
 
-  if (isLoading) {
+  if (isLoading || updatingProgress) {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color="#075eec" />
@@ -237,4 +261,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ViewRoadmapDetailsScreen;
+export default RoadmapDetailsScreen;

@@ -15,7 +15,6 @@ import NotificationsScreen from "../screens/NotificationsScreen";
 import ChatScreen from "../screens/ChatScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import MyLibraryScreen from "../screens/MyLibraryScreen";
-import LeaderboardScreen from "../screens/LeaderboardScreen";
 import RoadmapsScreen from "../screens/RoadmapsScreen";
 import CoursesScreen from "../screens/CoursesScreen";
 import ProjectsScreen from "../screens/ProjectsScreen";

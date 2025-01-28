@@ -32,7 +32,7 @@ const CoursesSection = ({ userProgress }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Your Courses</Text>
+      <Text style={styles.sectionTitle}>Courses</Text>
       <FlatList
         data={courses}
         renderItem={renderCourseItem}
@@ -44,7 +44,7 @@ const CoursesSection = ({ userProgress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginVertical: 16,
   },
   sectionTitle: {
     fontSize: 20,
