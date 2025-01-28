@@ -32,7 +32,7 @@ const MainSection = ({ userProgress }) => {
   if (!roadmap || !roadmap.order) {
     return (
       <View style={styles.errorContainer}>
-        <Text>No roadmap data available.</Text>
+        {/* <Text>No roadmap data available.</Text> */}
       </View>
     );
   }

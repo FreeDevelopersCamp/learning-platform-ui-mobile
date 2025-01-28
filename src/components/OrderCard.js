@@ -9,6 +9,7 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 
+import { useUpdateProgress } from "../hooks/progress/useProgress";
 import { formatDuration } from "../utils/helpers";
 
 const OrderCard = ({
@@ -25,8 +26,27 @@ const OrderCard = ({
   userProgress,
 }) => {
   const navigation = useNavigation();
+  const { mutate: updateProgress, isLoading: updatingProgress } =
+    useUpdateProgress();
 
   const handleStartClick = () => {
+    // Check if roadmapId exists in currentRoadmapsIds
+    const exists = userProgress?.currentRoadmapsIds?.some(
+      (item) => item.itemId === roadmap._id
+    );
+
+    if (!exists) {
+      // Add the roadmapId to currentRoadmapsIds in progress
+      const updatedProgress = {
+        ...userProgress,
+        currentRoadmapsIds: [
+          ...userProgress.currentRoadmapsIds,
+          { itemId: roadmap._id, progress: 0 },
+        ],
+      };
+
+      updateProgress(updatedProgress);
+    }
     navigation.navigate("ViewCourseOutlineScreen", {
       roadmap: roadmap,
       userProgress: userProgress,
@@ -63,18 +83,22 @@ const OrderCard = ({
           isCompleted && styles.completedButton,
           isSubmitted && styles.submittedButton,
         ]}
-        onPress={handleStartClick} // Trigger the handleStart function
-        disabled={isCompleted || isSubmitted}
+        onPress={handleStartClick}
+        disabled={isCompleted || isSubmitted || updatingProgress}
       >
-        <Text
-          style={[
-            styles.buttonText,
-            isCompleted && styles.completedButtonText,
-            isSubmitted && styles.submittedButtonText,
-          ]}
-        >
-          {isCompleted ? "Completed" : isSubmitted ? "Submitted" : "Start"}
-        </Text>
+        {updatingProgress ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text
+            style={[
+              styles.buttonText,
+              isCompleted && styles.completedButtonText,
+              isSubmitted && styles.submittedButtonText,
+            ]}
+          >
+            {isCompleted ? "Completed" : isSubmitted ? "Submitted" : "Start"}
+          </Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -152,11 +176,6 @@ const styles = StyleSheet.create({
   },
   submittedButtonText: {
     color: "#333",
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
 

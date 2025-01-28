@@ -42,19 +42,18 @@ export const formatCurrency = (value) => `$${value.toFixed(2)}`;
 // Convert minutes into a human-readable duration
 export const formatDuration = (minutes) => {
   if (minutes < 60) {
-    return `${minutes} Minute${minutes === 1 ? "" : "s"}`;
+    return `${minutes}`;
   }
   const hours = Math.floor(minutes / 60);
-
   return `${hours}`;
 };
 
 // Capitalize the first letter of each word in a hyphen-separated string
 export const capitalizeWords = (text) => {
   return text
-    .split("-") // Split the text by hyphens
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
-    .join(" "); // Join the words with spaces
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 };
 
 // Map role codes to human-readable role names
@@ -69,4 +68,51 @@ export const getRoleCode = (role) => {
     6: "Learner",
   };
   return roles[role] || "Unknown";
+};
+
+// Helper function to check if a date is today
+export const isToday = (dateStr) => {
+  const date = new Date(dateStr);
+  const today = new Date();
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
+};
+
+// Helper function to format the date
+export const formatDate = (timestamp) => {
+  const date = new Date(timestamp);
+  if (isToday(timestamp)) {
+    return "Today";
+  }
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }); // Example format: "Jan 28, 2025"
+};
+
+// ✅ NEW FUNCTION: Helper function to format time (hh:mm A format)
+export const formatTime = (timestamp) => {
+  const date = new Date(timestamp);
+  return date.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  }); // Example format: "04:32 PM"
+};
+
+// ✅ Group messages by date
+export const groupMessagesByDate = (messages) => {
+  const groupedMessages = {};
+  messages.forEach((msg) => {
+    const date = formatDate(msg.timestamp);
+    if (!groupedMessages[date]) {
+      groupedMessages[date] = [];
+    }
+    groupedMessages[date].push(msg);
+  });
+  return groupedMessages;
 };

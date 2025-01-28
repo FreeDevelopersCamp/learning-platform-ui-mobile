@@ -12,7 +12,7 @@ import TopBar from "../components/TopBar";
 import CourseDetails from "../components/CourseDetails";
 import CourseOutlineModal from "../components/CourseOutlineModal";
 
-const ViewCourseOutlineScreen = ({ route, navigation }) => {
+const ViewCourseOutlineScreen = ({ route }) => {
   const [flatStructure, setFlatStructure] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);

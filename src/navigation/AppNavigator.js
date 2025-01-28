@@ -5,6 +5,7 @@ import AuthScreen from "../screens/AuthScreen";
 import DrawerNavigator from "../components/DrawerNavigator";
 import RoadmapDetailsScreen from "../screens/RoadmapDetailsScreen";
 import ViewCourseOutlineScreen from "../screens/ViewCourseOutlineScreen";
+import ChatContainer from "../screens/ChatContainer";
 
 const Stack = createStackNavigator();
 
@@ -29,10 +30,21 @@ const AppNavigator = () => {
         component={RoadmapDetailsScreen}
         options={{ headerShown: true, title: "Roadmap Details" }}
       />
+
       <Stack.Screen
         name="ViewCourseOutlineScreen"
         component={ViewCourseOutlineScreen}
         options={{ headerShown: true, title: "Course Outline " }}
+      />
+
+      <Stack.Screen
+        name="Chatting"
+        component={ChatContainer}
+        options={{
+          headerShown: true,
+          title: "Chatting",
+          headerBackTitle: "Users",
+        }}
       />
     </Stack.Navigator>
   );
