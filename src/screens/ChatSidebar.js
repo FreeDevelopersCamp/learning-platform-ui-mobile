@@ -153,7 +153,6 @@ const ChatSidebar = ({
             style={styles.userItem}
             onPress={() => onSelectUser(item)}
           >
-            {console.log("item: ", item)}
             <View
               style={[
                 styles.avatarContainer,
