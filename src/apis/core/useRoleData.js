@@ -1,11 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
 
-import Admin from "../admin/Admin";
-import Instructor from "../instructor/Instructor";
-import Learner from "../learner/Learner";
+import Admin from "../roles/Admin";
+import Owner from "../roles/Owner";
+import Manager from "../roles/Manager";
+import AccountManager from "../roles/AccountManager";
+import ContentManager from "../roles/ContentManager";
+import Instructor from "../roles/Instructor";
+import Learner from "../roles/Learner";
 
-// Generic hook for fetching user data by role
+// ✅ Generic Hook for Fetching User Data by Role
 function useRoleData(roleKey, serviceInstance, userId) {
   return useQuery({
     queryKey: [roleKey, userId],
@@ -21,30 +25,54 @@ function useRoleData(roleKey, serviceInstance, userId) {
   });
 }
 
-// Function to get the appropriate service instance based on role
+// ✅ Function to Get Service Instance by Role
 export const getServiceInstanceByRole = (role) => {
   switch (role) {
     case "0":
-      return new Admin();
+      return Admin.getInstance();
+    case "1":
+      return Owner.getInstance();
+    case "2":
+      return Manager.getInstance();
+    case "3":
+      return AccountManager.getInstance();
+    case "4":
+      return ContentManager.getInstance();
     case "5":
-      return new Instructor();
+      return Instructor.getInstance();
     case "6":
-      return new Learner();
+      return Learner.getInstance();
     default:
       console.error(`Unknown role: ${role}`);
       return null;
   }
 };
 
-// Specific hooks for each role
+// ✅ Specific Hooks for Each Role
 export function useAdmin(userId) {
-  return useRoleData("admin", new Admin(), userId);
+  return useRoleData("admin", Admin.getInstance(), userId);
+}
+
+export function useOwner(userId) {
+  return useRoleData("owner", Owner.getInstance(), userId);
+}
+
+export function useManager(userId) {
+  return useRoleData("manager", Manager.getInstance(), userId);
+}
+
+export function useAccountManager(userId) {
+  return useRoleData("account-manager", AccountManager.getInstance(), userId);
+}
+
+export function useContentManager(userId) {
+  return useRoleData("content-manager", ContentManager.getInstance(), userId);
 }
 
 export function useInstructor(userId) {
-  return useRoleData("instructor", new Instructor(), userId);
+  return useRoleData("instructor", Instructor.getInstance(), userId);
 }
 
 export function useLearner(userId) {
-  return useRoleData("learner", new Learner(), userId);
+  return useRoleData("learner", Learner.getInstance(), userId);
 }

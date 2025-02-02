@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -14,17 +14,22 @@ import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 
 import { useAuth } from "../contexts/auth/AuthContext";
+import { useRoles } from "../hooks/auth/useRoles";
 
 const AuthScreen = () => {
   const navigation = useNavigation();
-  const { login } = useAuth();
+  const { login, isLoading } = useAuth();
+  const { navigateToRoleDashboard } = useRoles();
+
   const [form, setForm] = useState({
     email: "",
     password: "",
     role: "0",
   });
+
   const [isPickerVisible, setPickerVisible] = useState(false);
-  const [loading, setLoading] = useState(false); // Local loading state for button
+  const [loading, setLoading] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
   const roleOptions = [
     { label: "Admin", value: "0" },
@@ -64,24 +69,42 @@ const AuthScreen = () => {
         role: form.role,
       });
 
+      if (!response || !response.token) {
+        throw new Error("Login failed. No response received.");
+      }
+
       Toast.show({
         type: "success",
         text1: "Login Successful",
         text2: "Welcome back!",
       });
 
-      navigation.reset({ index: 0, routes: [{ name: "Dashboard" }] });
+      setUserRole(form.role);
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("❌ Login failed:", error);
       Toast.show({
         type: "error",
         text1: "Login Failed",
         text2: error.message || "An error occurred. Please try again.",
       });
     } finally {
-      setLoading(false); // Ensure loading is reset after the login attempt finishes
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (userRole) {
+      navigateToRoleDashboard(userRole);
+    }
+  }, [userRole]);
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#075eec" />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#e8ecf4" }}>
@@ -138,8 +161,8 @@ const AuthScreen = () => {
                     key={option.value}
                     label={option.label}
                     value={option.value}
-                    color="#333" // Make the options text darker
-                    style={{ fontSize: 16 }} // Optional: Add font size
+                    color="#333"
+                    style={{ fontSize: 16 }}
                   />
                 ))}
               </Picker>
@@ -157,7 +180,6 @@ const AuthScreen = () => {
             )}
           </View>
 
-          {/* Button to change role */}
           <View style={styles.formAction}>
             <TouchableOpacity onPress={togglePickerVisibility}>
               <View style={styles.btn}>
@@ -184,7 +206,7 @@ const AuthScreen = () => {
         </View>
       </KeyboardAwareScrollView>
 
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
         <Text style={styles.formFooter}>
           Don't have an account?{" "}
           <Text style={{ textDecorationLine: "underline" }}>Sign up</Text>
