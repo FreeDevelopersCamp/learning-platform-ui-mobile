@@ -41,12 +41,14 @@ const RoadmapCard = ({ roadmap, userProgress }) => {
       <View style={styles.separator} />
 
       <View style={styles.details}>
-        <View style={styles.progressSection}>
-          <View style={styles.progressContainer}>
-            <View style={[styles.progressBar, { width: `${progress}%` }]} />
+        {isCurrent && (
+          <View style={styles.progressSection}>
+            <View style={styles.progressContainer}>
+              <View style={[styles.progressBar, { width: `${progress}%` }]} />
+            </View>
+            <Text style={styles.progressText}>{progress}%</Text>
           </View>
-          <Text style={styles.progressText}>{progress}%</Text>
-        </View>
+        )}
         <TouchableOpacity
           style={[
             styles.button,

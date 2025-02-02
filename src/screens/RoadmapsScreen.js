@@ -79,17 +79,24 @@ const RoadmapsScreen = () => {
         </Text>
       </View>
 
+      {/* Roadmaps List - Full Width Cards */}
       <View style={styles.roadmapsContainer}>
         {filteredRoadmaps.map((roadmap, index) => (
-          <RoadmapCard
+          <View
             key={roadmap._id || `${roadmap.topic}-${index}`}
-            roadmap={roadmap}
-            userProgress={userProgress}
-            onContinue={() => console.log("Continue pressed for", roadmap._id)}
-            onViewDetails={() =>
-              console.log("View details pressed for", roadmap._id)
-            }
-          />
+            style={styles.fullWidthCard}
+          >
+            <RoadmapCard
+              roadmap={roadmap}
+              userProgress={userProgress}
+              onContinue={() =>
+                console.log("Continue pressed for", roadmap._id)
+              }
+              onViewDetails={() =>
+                console.log("View details pressed for", roadmap._id)
+              }
+            />
+          </View>
         ))}
       </View>
     </ScrollView>
@@ -158,9 +165,12 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   roadmapsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
+    flexDirection: "column", // Ensures items stack vertically
+    width: "100%", // Takes full width
+  },
+  fullWidthCard: {
+    width: "100%", // Full width for each card
+    marginBottom: 16, // Adds spacing between cards
   },
 });
 

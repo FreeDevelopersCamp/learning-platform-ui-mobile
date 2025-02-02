@@ -30,7 +30,8 @@ const ViewCourse = ({ order, userProgress }) => {
       // Save course if it's not already saved in completedCoursesIds
       if (!userProgress.completedCoursesIds.includes(course._id)) {
         const updatedProgress = {
-          ...userProgress,
+          _id: userProgress._id,
+          userId: userProgress.user?._id,
           completedCoursesIds: [
             ...new Set([...userProgress.completedCoursesIds, course._id]),
           ],

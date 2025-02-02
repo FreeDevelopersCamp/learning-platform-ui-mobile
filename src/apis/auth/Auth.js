@@ -79,13 +79,15 @@ export const Auth = {
         throw new Error("No token found. Please log in again.");
       }
 
+      console.log("🔹 Using Token:", token); // Debugging: Check token in logs
+
       const response = await fetch(`${BASE_URL}/Auth/session`, {
         method: "GET",
         headers: {
           Accept: "application/json",
           "x-tenant-id": REACT_APP_X_TENANT_ID,
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // Ensure token is sent
         },
       });
 
@@ -94,9 +96,9 @@ export const Auth = {
       }
 
       const data = await response.json();
-      return data; // Return the session data
+      return data; // Return session data
     } catch (error) {
-      console.error("Failed to fetch session:", error);
+      console.error("❌ Failed to fetch session:", error);
       throw error;
     }
   },

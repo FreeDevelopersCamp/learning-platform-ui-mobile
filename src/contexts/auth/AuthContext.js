@@ -17,14 +17,19 @@ export const AuthProvider = ({ children }) => {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
         setIsLoading(false);
-        setAuth({ isAuthenticated: false });
+        setAuth({ isAuthenticated: false, role: null });
         return;
       }
 
       const session = await Auth.getSession();
+
       if (session) {
-        setAuth({ isAuthenticated: true, username: session.username });
-        setSession({ ...session, token });
+        setAuth({
+          isAuthenticated: true,
+          role: session.role,
+          username: session.username,
+        });
+        setSession(session);
       } else {
         throw new Error("Invalid session data");
       }
@@ -48,11 +53,19 @@ export const AuthProvider = ({ children }) => {
         credentials.password,
         credentials.role
       );
-      await AsyncStorage.setItem("token", response.token);
-      await fetchSession(); // Fetch the session after login
+
+      if (response.token) {
+        await AsyncStorage.setItem("token", response.token);
+        await fetchSession(); // Ensure session is fetched
+
+        return response; // ✅ Fix: Return the response
+      } else {
+        throw new Error("No token received");
+      }
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("❌ Login failed in AuthContext:", error);
       setError("Login failed. Please try again.");
+      throw error; // ✅ Fix: Throw the error so AuthScreen can handle it
     } finally {
       setIsLoading(false);
     }
@@ -92,4 +105,10 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};

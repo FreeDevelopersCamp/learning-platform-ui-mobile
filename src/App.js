@@ -5,6 +5,8 @@ import Toast from "react-native-toast-message";
 import { StatusBar } from "react-native";
 
 import { AuthProvider } from "./contexts/auth/AuthContext";
+import { UserSelectionProvider } from "./contexts/users/UserSelectionContext";
+
 import { DarkModeProvider } from "./contexts/DarkModeContext";
 import AppNavigator from "./navigation/AppNavigator";
 
@@ -14,14 +16,16 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <NavigationContainer>
-          <DarkModeProvider>
-            {/* Set the status bar style */}
-            <StatusBar barStyle="light-content" backgroundColor="#18212F" />
-            <AppNavigator />
-          </DarkModeProvider>
-        </NavigationContainer>
-        <Toast />
+        <UserSelectionProvider>
+          <NavigationContainer>
+            <DarkModeProvider>
+              {/* Set the status bar style */}
+              <StatusBar barStyle="light-content" backgroundColor="#18212F" />
+              <AppNavigator />
+            </DarkModeProvider>
+          </NavigationContainer>
+          <Toast />
+        </UserSelectionProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
