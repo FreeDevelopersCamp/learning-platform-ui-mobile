@@ -92,7 +92,7 @@ const MainScreen = () => {
   const renderRoleCard = ({ item }) => (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate("UsersScreen", { role: item.roleKey })}
+      onPress={() => navigation.navigate("UsersTable", { role: item.roleKey })}
     >
       <Text style={styles.cardTitle}>{item.title}</Text>
       <Text style={styles.count}>{item.count}</Text>
@@ -106,7 +106,12 @@ const MainScreen = () => {
           style={styles.userImage}
         />
       </View>
-      <TouchableOpacity style={styles.buttonContainer}>
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() =>
+          navigation.navigate("UsersTable", { role: item.roleKey })
+        }
+      >
         <Text style={styles.showAllText}>Show All</Text>
       </TouchableOpacity>
     </TouchableOpacity>

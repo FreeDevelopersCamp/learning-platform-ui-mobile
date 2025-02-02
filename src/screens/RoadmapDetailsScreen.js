@@ -74,10 +74,11 @@ const RoadmapDetailsScreen = () => {
   const handleButtonPress = () => {
     if (buttonText === "Start") {
       const updatedProgress = {
-        ...userProgress,
+        _id: userProgress._id,
+        userId: userProgress.user._id,
         currentRoadmapsIds: [
-          ...userProgress.currentRoadmapsIds,
-          { itemId: roadmapId, progress: 0 },
+          ...(userProgress?.currentRoadmapsIds || []),
+          { itemId: roadmapId.toString(), progress: 0 },
         ],
       };
 

@@ -19,6 +19,7 @@ import RoadmapsScreen from "../screens/RoadmapsScreen";
 import CoursesScreen from "../screens/CoursesScreen";
 import ProjectsScreen from "../screens/ProjectsScreen";
 import CertificationsScreen from "../screens/CertificationsScreen";
+import SettingsScreen from "../screens/SettingsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -172,11 +173,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="Settings"
-        component={withAppLayout(() => (
-          <View>
-            <Text>Settings Screen</Text>
-          </View>
-        ))}
+        component={withAppLayout(SettingsScreen)}
       />
     </Drawer.Navigator>
   );

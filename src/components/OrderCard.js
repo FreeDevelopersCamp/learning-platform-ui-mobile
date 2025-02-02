@@ -38,7 +38,8 @@ const OrderCard = ({
     if (!exists) {
       // Add the roadmapId to currentRoadmapsIds in progress
       const updatedProgress = {
-        ...userProgress,
+        _id: userProgress._id,
+        userId: userProgress.user._id,
         currentRoadmapsIds: [
           ...userProgress.currentRoadmapsIds,
           { itemId: roadmap._id, progress: 0 },

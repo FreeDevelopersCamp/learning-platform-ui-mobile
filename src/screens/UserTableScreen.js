@@ -10,7 +10,6 @@ import {
   TextInput,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Checkbox } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useListUser } from "../apis/core/useListUser";
 
@@ -33,6 +32,7 @@ const UserTableScreen = () => {
   const [searchText, setSearchText] = useState("");
   const [selectedRole, setSelectedRole] = useState("All Roles");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState(null); // Track which user menu is open
 
   if (isLoading) {
     return (
@@ -62,12 +62,7 @@ const UserTableScreen = () => {
   const renderUserRow = ({ item }) => (
     <View style={styles.row}>
       {/* Dark Themed Checkbox */}
-      {/* <Checkbox
-        status="unchecked"
-        color="#444"
-        uncheckedColor="#555"
-        style={styles.checkbox}
-      /> */}
+      {/* <Checkbox status="unchecked" color="#444" uncheckedColor="#555" style={styles.checkbox} /> */}
 
       {/* Profile Image */}
       <Image
@@ -83,16 +78,10 @@ const UserTableScreen = () => {
           {item?.personalInformation?.name?.first}{" "}
           {item?.personalInformation?.name?.last}
         </Text>
-        {/* <Text style={styles.userUsername}>{item?.username}</Text> */}
       </View>
 
       {/* Email */}
       <Text style={styles.userEmail}>{item?.contacts?.email}</Text>
-
-      {/* Status */}
-      {/* <View style={[styles.statusBadge, getStatusStyle(item.status)]}>
-        <Text style={styles.statusText}>{item?.status?.toUpperCase()}</Text>
-      </View> */}
 
       {/* Role */}
       <Text style={styles.userRole}>
@@ -101,11 +90,40 @@ const UserTableScreen = () => {
 
       {/* More Options */}
       <TouchableOpacity
-        onPress={() => console.log("More Options")}
+        onPress={() =>
+          setDropdownVisible(dropdownVisible === item._id ? null : item._id)
+        }
         style={styles.moreOptions}
       >
         <Icon name="ellipsis-vertical" size={20} color="#333" />
       </TouchableOpacity>
+
+      {/* Dropdown Menu */}
+      {dropdownVisible === item._id && (
+        <View style={styles.dropdownMenu}>
+          <TouchableOpacity
+            style={styles.dropdownItem}
+            onPress={() => {
+              setDropdownVisible(null);
+              navigation.navigate("UserProfileScreen", { userId: item._id });
+            }}
+          >
+            <Icon name="eye-outline" size={16} color="#007bff" />
+            <Text style={styles.dropdownText}>View Details</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.dropdownItem}
+            onPress={() => {
+              setDropdownVisible(null);
+              console.log(`Deactivate user: ${item._id}`); // Replace with actual deactivation logic
+            }}
+          >
+            <Icon name="person-remove-outline" size={16} color="#dc3545" />
+            <Text style={styles.dropdownText}>Deactivate</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 
@@ -114,7 +132,7 @@ const UserTableScreen = () => {
       {/* ✅ Title */}
       <Text style={styles.title}>All Users</Text>
 
-      {/* ✅ Search & Role Filter Section (Updated to Chat Sidebar Style) */}
+      {/* ✅ Search & Role Filter Section */}
       <View style={styles.filterContainer}>
         {/* 🔹 Search Bar with Icon */}
         <View style={styles.searchBarContainer}>
@@ -177,38 +195,31 @@ const UserTableScreen = () => {
 
 export default UserTableScreen;
 
-// ✅ Function to Style Status Badge
-const getStatusStyle = (status) => {
-  switch (status?.toLowerCase()) {
-    case "activated":
-      return {
-        backgroundColor: "#d7f5c9",
-        paddingHorizontal: 10,
-        borderRadius: 12,
-      };
-    case "pending":
-      return {
-        backgroundColor: "#c7e9f5",
-        paddingHorizontal: 10,
-        borderRadius: 12,
-      };
-    case "deactivated":
-      return {
-        backgroundColor: "#f5c7c7",
-        paddingHorizontal: 10,
-        borderRadius: 12,
-      };
-    default:
-      return {
-        backgroundColor: "#ddd",
-        paddingHorizontal: 10,
-        borderRadius: 12,
-      };
-  }
-};
-
 // ✅ Styles
 const styles = StyleSheet.create({
+  dropdownMenu: {
+    position: "absolute",
+    right: 30,
+    top: 50,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    elevation: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    zIndex: 999,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+  },
+  dropdownItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+  },
+  dropdownText: {
+    marginLeft: 8,
+    fontSize: 14,
+  },
   container: {
     flex: 1,
     backgroundColor: "#f8f9fc",
@@ -281,6 +292,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     alignItems: "center",
     elevation: 3,
+    position: "relative",
   },
   profileImage: {
     width: 40,
