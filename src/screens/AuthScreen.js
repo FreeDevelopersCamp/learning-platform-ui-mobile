@@ -98,7 +98,7 @@ const AuthScreen = () => {
     }
   }, [userRole]);
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#075eec" />

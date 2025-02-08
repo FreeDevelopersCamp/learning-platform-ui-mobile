@@ -20,6 +20,7 @@ export const Auth = {
         body: JSON.stringify({ userName, password, role }),
       });
 
+      console.log("BASE_URL: ", BASE_URL);
       if (!response.ok) {
         const errorData = await response.json();
         const errorMessage =
